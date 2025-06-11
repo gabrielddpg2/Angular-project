@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { TranscriptionComponent } from './transcription/transcription';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  // Importe seu novo componente aqui
+  imports: [RouterOutlet, TranscriptionComponent], 
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
-  protected title = 'iara';
+  title = 'meu-projeto-angular';
 }

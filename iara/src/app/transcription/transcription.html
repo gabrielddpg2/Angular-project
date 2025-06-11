@@ -1,0 +1,12 @@
+<h1>Transcrição de Áudio</h1>
+
+<button 
+  id="startButton" 
+  (click)="startTranscription()" 
+  [disabled]="isTranscriptionActive">
+  {{ isTranscriptionActive ? 'Transcrevendo...' : 'Iniciar Transcrição' }}
+</button>
+
+<div id="transcriptions">
+  <p *ngFor="let item of displayedTranscriptions" class="transcription-item" [innerHTML]="item.content"></p>
+</div>
