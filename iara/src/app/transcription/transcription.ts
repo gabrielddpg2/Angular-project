@@ -25,7 +25,8 @@ export class TranscriptionComponent implements OnInit {
 
   isTranscriptionActive = false;
   displayedTranscriptions: DisplayedTranscription[] = [];
-  
+  keywordError: string | null = null;
+
   private medicalKeywords: string[] = [];
   private medicalKeywordsRegex: RegExp | null = null;
   private readonly maxSegments = 10;
@@ -35,14 +36,22 @@ export class TranscriptionComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {
-    this.transcriptionService.getMedicalKeywords().then(keywords => {
+  async ngOnInit(): Promise<void> {
+    try {
+      this.keywordError = null;
+      const keywords = await this.transcriptionService.getMedicalKeywords();
+      
       this.medicalKeywords = keywords;
       if (this.medicalKeywords.length > 0) {
         const pattern = this.medicalKeywords.map(k => k.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')).join('|');
         this.medicalKeywordsRegex = new RegExp(`(${pattern})`, 'gi');
       }
-    });
+    } catch (error) {
+      this.keywordError = "Falha ao carregar palavras-chave, pois nossos sistemas estão temporiamente indisponiveis. O destaque de termos médicos não funcionará. Tente novamente mais tarde.";
+      console.error(error);
+    } finally {
+      this.cdr.markForCheck();
+    }
   }
 
   async startTranscription(): Promise<void> {

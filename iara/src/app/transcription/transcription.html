@@ -9,6 +9,11 @@
         Clique no botão para iniciar a simulação de transcrição de áudio em tempo real.
       </p>
     </header>
+    
+    <div *ngIf="keywordError" role="alert" class="mb-6 p-4 border-l-4 rounded-r-lg bg-red-100 border-red-500 text-red-800">
+      <p class="font-bold">Atenção</p>
+      <p>{{ keywordError }}</p>
+    </div>
 
     <div class="mb-8">
       <button 

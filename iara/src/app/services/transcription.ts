@@ -39,14 +39,18 @@ export class TranscriptionService {
       const response = await fetch(
         "https://iara-interview-data-65704389243.southamerica-east1.run.app"
       );
+
+      // Verifica se a resposta HTTP foi bem-sucedida (status 200-299)
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`Erro na API: Status ${response.status}`);
       }
+
       const data = await response.json();
       return data.keywords || [];
     } catch (error) {
-      console.error("Failed to fetch medical keywords:", error);
-      return [];
+      console.error("Falha ao buscar palavras-chave médicas:", error);
+      // Relança o erro para que o componente que chamou possa tratá-lo
+      throw new Error("Não foi possível carregar os dados das palavras-chave.");
     }
   }
 
