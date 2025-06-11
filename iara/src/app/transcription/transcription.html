@@ -32,26 +32,26 @@
       </div>
     </div>
 
-    <div class="h-[60vh] w-full rounded-lg border bg-white overflow-y-auto">
-        <div 
-            *ngFor="let item of filteredTranscriptions; trackBy: trackBySegmentId" 
-            class="p-4 border-b border-slate-200">
-            
-            <div *ngIf="item.isLoading; else content" class="animate-pulse flex space-x-4">
-              <div class="flex-1 space-y-3 py-1"><div class="h-2 bg-slate-200 rounded"></div><div class="grid grid-cols-3 gap-4"><div class="h-2 bg-slate-200 rounded col-span-2"></div><div class="h-2 bg-slate-200 rounded col-span-1"></div></div></div>
-            </div>
-
-            <ng-template #content>
-              <p class="text-slate-700">
-                <b class="text-slate-900 mr-2">Segmento {{ item.segmentId + 1 }}:</b>
-                <span *ngFor="let part of item.parts">
-                  <span [class.bg-yellow-200]="part.isKeyword" [class.font-medium]="part.isKeyword" [class.text-yellow-900]="part.isKeyword" class="rounded px-1 py-0.5">{{ part.text }}</span>
-                </span>
-              </p>
-            </ng-template>
-
+    <cdk-virtual-scroll-viewport itemSize="60" class="h-[60vh] w-full rounded-lg border bg-white overflow-y-auto">
+      <div 
+        *cdkVirtualFor="let item of filteredTranscriptions; trackBy: trackBySegmentId" 
+        class="p-4 border-b border-slate-200">
+        
+        <div *ngIf="item.isLoading; else content" class="animate-pulse flex space-x-4">
+          <div class="flex-1 space-y-3 py-1"><div class="h-2 bg-slate-200 rounded"></div><div class="grid grid-cols-3 gap-4"><div class="h-2 bg-slate-200 rounded col-span-2"></div><div class="h-2 bg-slate-200 rounded col-span-1"></div></div></div>
         </div>
-    </div>
+
+        <ng-template #content>
+          <p class="text-slate-700">
+            <b class="text-slate-900 mr-2">Segmento {{ item.segmentId + 1 }}:</b>
+            <span *ngFor="let part of item.parts">
+              <span [class.bg-yellow-200]="part.isKeyword" [class.font-medium]="part.isKeyword" [class.text-yellow-900]="part.isKeyword" class="rounded px-1 py-0.5">{{ part.text }}</span>
+            </span>
+          </p>
+        </ng-template>
+
+      </div>
+    </cdk-virtual-scroll-viewport>
 
   </div>
 </div>
