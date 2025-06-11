@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Transcription } from './transcription';
+import { TranscriptionService } from './transcription';
 
-describe('Transcription', () => {
-  let service: Transcription;
+describe('TranscriptionService', () => {
+  let service: TranscriptionService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(Transcription);
+    service = TestBed.inject(TranscriptionService);
   });
 
   it('should be created', () => {

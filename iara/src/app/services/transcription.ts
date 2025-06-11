@@ -34,16 +34,22 @@ export class TranscriptionService {
 
   constructor() { }
 
-  // Retorna as palavras-chave médicas da API externa
   async getMedicalKeywords(): Promise<string[]> {
-    const response = await fetch(
-      "https://iara-interview-data-65704389243.southamerica-east1.run.app"
-    );
-    const data = await response.json();
-    return data.keywords;
+    try {
+      const response = await fetch(
+        "https://iara-interview-data-65704389243.southamerica-east1.run.app"
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data.keywords || [];
+    } catch (error) {
+      console.error("Failed to fetch medical keywords:", error);
+      return [];
+    }
   }
 
-  // Busca uma transcrição do mock
   fetchTranscription(segmentId: number) {
     return mockSpeechRecognitionAPI.fetchTranscription(segmentId);
   }

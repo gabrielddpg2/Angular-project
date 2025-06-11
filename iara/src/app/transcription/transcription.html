@@ -1,12 +1,53 @@
-<h1>Transcrição de Áudio</h1>
+<div class="bg-slate-50 min-h-screen p-4 sm:p-6 lg:p-8">
+  <div class="max-w-4xl mx-auto">
+    
+    <header class="mb-8">
+      <h1 class="text-3xl sm:text-4xl font-bold text-slate-800 tracking-tight">
+        Transcrição de Áudio
+      </h1>
+      <p class="mt-2 text-slate-600">
+        Clique no botão para iniciar a simulação de transcrição de áudio em tempo real.
+      </p>
+    </header>
 
-<button 
-  id="startButton" 
-  (click)="startTranscription()" 
-  [disabled]="isTranscriptionActive">
-  {{ isTranscriptionActive ? 'Transcrevendo...' : 'Iniciar Transcrição' }}
-</button>
+    <div class="mb-8">
+      <button 
+        id="startButton"
+        (click)="startTranscription()"
+        [disabled]="isTranscriptionActive"
+        class="px-6 py-3 font-semibold text-white rounded-md shadow-md transition-colors duration-300
+               bg-blue-600 hover:bg-blue-700
+               disabled:bg-slate-400 disabled:cursor-not-allowed disabled:shadow-none">
+        {{ isTranscriptionActive ? 'Transcrevendo...' : 'Iniciar Transcrição' }}
+      </button>
+    </div>
 
-<div id="transcriptions">
-  <p *ngFor="let item of displayedTranscriptions" class="transcription-item" [innerHTML]="item.content"></p>
+    <div id="transcriptions" class="space-y-4">
+      <div 
+        *ngFor="let item of displayedTranscriptions; trackBy: trackBySegmentId" 
+        class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 transition-all duration-300">
+        
+        <div *ngIf="item.isLoading; else content" class="animate-pulse flex space-x-4">
+          <div class="flex-1 space-y-3 py-1">
+            <div class="h-2 bg-slate-200 rounded"></div>
+            <div class="grid grid-cols-3 gap-4">
+              <div class="h-2 bg-slate-200 rounded col-span-2"></div>
+              <div class="h-2 bg-slate-200 rounded col-span-1"></div>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #content>
+          <p class="text-slate-700">
+            <b class="text-slate-900 mr-2">Segmento {{ item.segmentId + 1 }}:</b>
+            <span *ngFor="let part of item.parts">
+              <span [class.bg-yellow-200]="part.isKeyword" [class.font-medium]="part.isKeyword" [class.text-yellow-900]="part.isKeyword" class="rounded px-1 py-0.5">{{ part.text }}</span>
+            </span>
+          </p>
+        </ng-template>
+
+      </div>
+    </div>
+
+  </div>
 </div>

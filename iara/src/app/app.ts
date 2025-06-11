@@ -6,7 +6,7 @@ import { TranscriptionComponent } from './transcription/transcription';
   selector: 'app-root',
   standalone: true,
   // Importe seu novo componente aqui
-  imports: [RouterOutlet, TranscriptionComponent], 
+  imports: [TranscriptionComponent], 
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
