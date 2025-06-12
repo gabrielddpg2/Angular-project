@@ -45,7 +45,7 @@
           <p class="text-slate-700">
             <b class="text-slate-900 mr-2">Segmento {{ item.segmentId + 1 }}:</b>
             <span *ngFor="let part of item.parts">
-              <span [class.bg-yellow-200]="part.isKeyword" [class.font-medium]="part.isKeyword" [class.text-yellow-900]="part.isKeyword" class="rounded px-1 py-0.5">{{ part.text }}</span>
+              <span [class.bg-yellow-200]="part.isKeyword" [class.font-medium]="part.isKeyword" [class.text-yellow-900]="part.isKeyword" class="rounded py-0.5">{{ part.text }}</span>
             </span>
           </p>
         </ng-template>

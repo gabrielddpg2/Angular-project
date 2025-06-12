@@ -21,7 +21,7 @@ const mockSpeechRecognitionAPI = {
       setTimeout(() => {
         // A lógica de repetição com o módulo (%) continua aqui, mas o componente
         // não vai mais solicitar índices que causem a repetição.
-        const text = `Segmento de áudio ${segmentId + 1}: ${this.sampleSentences[segmentId % this.sampleSentences.length]}`;
+        const text = this.sampleSentences[segmentId % this.sampleSentences.length];
         
         resolve({
           segmentId,
