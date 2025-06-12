@@ -1,0 +1,12 @@
+# A LINHA 'node_modules' FOI REMOVIDA DESTA LISTA
+
+# Ignora a pasta de saída do build
+dist
+.angular
+
+# Ignora logs e arquivos de configuração
+npm-debug.log
+.DS_Store
+.vscode/
+.git/
+.gitignore

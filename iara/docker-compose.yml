@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  angular-dev:
+    build:
+      context: .
+      target: build
+    
+    ports:
+      - "4200:4200"
+      
+    command: npm start -- --host 0.0.0.0
+
+    # Voltamos para a versão que isola o node_modules do contêiner,
+    # garantindo que o 'esbuild' de Linux seja usado durante o desenvolvimento.
+    volumes:
+      - .:/app
+      - /app/node_modules
