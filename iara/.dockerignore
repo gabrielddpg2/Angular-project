@@ -1,10 +1,11 @@
-# A LINHA 'node_modules' FOI REMOVIDA DESTA LISTA
+# Ignora as dependências locais, que serão instaladas dentro do contêiner
+node_modules
 
-# Ignora a pasta de saída do build
+# Ignora a pasta de saída do build, pois ela será gerada dentro do contêiner
 dist
 .angular
 
-# Ignora logs e arquivos de configuração
+# Ignora logs e arquivos de configuração de IDEs e do git
 npm-debug.log
 .DS_Store
 .vscode/
