@@ -1,8 +1,12 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { Subject } from 'rxjs';
+
 import { TranscriptionService } from '../services/transcription';
 
+// Interfaces (sem alterações)
 interface TranscriptionPart {
   text: string;
   isKeyword: boolean;
@@ -19,22 +23,22 @@ interface DisplayedTranscription {
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    ScrollingModule
   ],
   templateUrl: './transcription.html',
   styleUrl: './transcription.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TranscriptionComponent implements OnInit {
+export class TranscriptionComponent implements OnInit, OnDestroy {
 
   isTranscriptionActive = false;
   displayedTranscriptions: DisplayedTranscription[] = [];
   keywordError: string | null = null;
   filterText: string = '';
 
-  private medicalKeywords: string[] = [];
-  private medicalKeywordsRegex: RegExp | null = null;
-  private readonly maxSegments = 10;
+  private medicalKeywordSet = new Set<string>();
+  private destroy$ = new Subject<void>();
 
   constructor(
     private transcriptionService: TranscriptionService,
@@ -43,17 +47,18 @@ export class TranscriptionComponent implements OnInit {
 
   ngOnInit(): void {
     this.transcriptionService.getMedicalKeywords().then(keywords => {
-      this.medicalKeywords = keywords;
-      if (this.medicalKeywords.length > 0) {
-        const pattern = this.medicalKeywords.map(k => k.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')).join('|');
-        this.medicalKeywordsRegex = new RegExp(`(${pattern})`, 'gi');
-      }
+      this.medicalKeywordSet = new Set(keywords.map(k => k.toLowerCase()));
     }).catch(error => {
       this.keywordError = "Falha ao carregar palavras-chave. O destaque não funcionará.";
       console.error(error);
     }).finally(() => {
       this.cdr.markForCheck();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   get filteredTranscriptions(): DisplayedTranscription[] {
@@ -70,15 +75,39 @@ export class TranscriptionComponent implements OnInit {
     this.isTranscriptionActive = true;
     this.filterText = '';
     
-    this.displayedTranscriptions = Array.from({ length: this.maxSegments }, (_, i) => ({ segmentId: i, parts: [], isLoading: true }));
+    // --- INÍCIO DA CORREÇÃO ---
+    // Pega dinamicamente o número de segmentos do serviço. Adeus, número mágico!
+    const liveSessionSegments = this.transcriptionService.getLiveSessionSegmentCount();
+    // --- FIM DA CORREÇÃO ---
+
+    this.displayedTranscriptions = Array.from({ length: liveSessionSegments }, (_, i) => ({ 
+      segmentId: i, 
+      parts: [], 
+      isLoading: true 
+    }));
+    
     this.cdr.markForCheck();
 
-    for (let i = 0; i < this.maxSegments; i++) {
-        const response = await this.transcriptionService.fetchTranscription(i);
-        const index = this.displayedTranscriptions.findIndex(t => t.segmentId === response.segmentId);
-        if (index !== -1) {
-            this.displayedTranscriptions[index] = { segmentId: response.segmentId, parts: this.processKeywords(response.text), isLoading: false };
+    for (let i = 0; i < liveSessionSegments; i++) {
+        if (!this.isTranscriptionActive) break;
+
+        try {
+            const response = await this.transcriptionService.fetchTranscription(i);
+            const index = i;
+            
+            const newItem = { 
+                segmentId: response.segmentId, 
+                parts: this.processKeywords(response.text), 
+                isLoading: false 
+            };
+
+            const newTranscriptions = [...this.displayedTranscriptions];
+            newTranscriptions[index] = newItem;
+            this.displayedTranscriptions = newTranscriptions;
+            
             this.cdr.markForCheck();
+        } catch (error) {
+            console.error(`Falha ao buscar segmento ${i}:`, error);
         }
     }
 
@@ -87,10 +116,10 @@ export class TranscriptionComponent implements OnInit {
   }
   
   exportToTxt(): void {
-    if (this.displayedTranscriptions.every(t => t.isLoading)) return;
+    if (this.displayedTranscriptions.every(t => !t || t.isLoading)) return;
 
     const content = this.displayedTranscriptions
-      .filter(item => !item.isLoading)
+      .filter(item => item && !item.isLoading)
       .map(item => {
         const text = item.parts.map(part => part.text).join('');
         return `Segmento ${item.segmentId + 1}: ${text}`;
@@ -106,17 +135,21 @@ export class TranscriptionComponent implements OnInit {
     URL.revokeObjectURL(url);
   }
 
-  trackBySegmentId(index: number, item: DisplayedTranscription): number { return item.segmentId; }
+  trackBySegmentId(index: number, item: DisplayedTranscription): number { 
+    return item ? item.segmentId : index; 
+  }
   
   private processKeywords(text: string): TranscriptionPart[] {
-    if (!this.medicalKeywordsRegex || text.trim() === '') {
+    if (this.medicalKeywordSet.size === 0 || text.trim() === '') {
       return [{ text, isKeyword: false }];
     }
-    const keywordSet = new Set(this.medicalKeywords);
-    const parts = text.split(this.medicalKeywordsRegex).filter(part => part);
-    return parts.map(part => ({
-      text: part,
-      isKeyword: keywordSet.has(part)
-    }));
+  
+    const wordSplitRegex = /([a-zA-ZÀ-ú0-9]+)|([.,;!?\s]+)/g;
+    const parts = text.match(wordSplitRegex) || [];
+  
+    return parts.map(part => {
+      const isKeyword = this.medicalKeywordSet.has(part.toLowerCase());
+      return { text: part, isKeyword };
+    });
   }
 }

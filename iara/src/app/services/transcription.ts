@@ -1,26 +1,31 @@
 import { Injectable } from '@angular/core';
 
-// Simula uma API de reconhecimento de fala
 const mockSpeechRecognitionAPI = {
-  transcriptions: [
-    "Olá, doutor. Tenho sentido uma dor de cabeça persistente.",
-    "A dor se concentra na parte de trás da minha cabeça e às vezes irradia para o meu pescoço.",
-    "Começou há cerca de três dias.",
-    "Não, não tive febre nem outros sintomas.",
-    "Sim, tomei um analgésico, mas não ajudou muito.",
-    "A dor piora quando fico muito tempo em frente ao computador.",
-    "Certo, doutor. Farei os exames que o senhor pediu.",
-    "Muito obrigado pela sua ajuda.",
-    "Vou marcar o retorno assim que tiver os resultados.",
-    "Tenha um bom dia.",
+  sampleSentences: [
+    "O paciente relata dor de cabeça.",
+    "A febre persiste há três dias.",
+    "Foi receitado um analgésico para o controle da dor.",
+    "Os exames de sangue não mostraram alterações significativas.",
+    "Recomendo repouso e hidratação contínua.",
+    "A dor irradia para a região do pescoço.",
+    "Não há histórico de alergias a medicamentos.",
+    "A pressão arterial está estável em 120 por 80.",
+    "O retorno deve ser agendado em uma semana para reavaliação.",
+    "Foram solicitados exames de imagem para um diagnóstico mais preciso.",
   ],
+
   fetchTranscription(segmentId: number): Promise<{ segmentId: number, text: string }> {
     return new Promise((resolve) => {
-      const delay = Math.random() * 1200 + 200;
+      const delay = Math.random() * 50 + 50;
+      
       setTimeout(() => {
+        // A lógica de repetição com o módulo (%) continua aqui, mas o componente
+        // não vai mais solicitar índices que causem a repetição.
+        const text = this.sampleSentences[segmentId % this.sampleSentences.length];
+        
         resolve({
           segmentId,
-          text: this.transcriptions[segmentId] || "Fim da transcrição.",
+          text: text,
         });
       }, delay);
     });
@@ -34,13 +39,20 @@ export class TranscriptionService {
 
   constructor() { }
 
+  /**
+   * Retorna o número de segmentos disponíveis para a simulação de sessão ao vivo.
+   * Isso desacopla o componente do conhecimento interno do mock de dados.
+   */
+  getLiveSessionSegmentCount(): number {
+    return mockSpeechRecognitionAPI.sampleSentences.length;
+  }
+
   async getMedicalKeywords(): Promise<string[]> {
     try {
       const response = await fetch(
         "https://iara-interview-data-65704389243.southamerica-east1.run.app"
       );
 
-      // Verifica se a resposta HTTP foi bem-sucedida (status 200-299)
       if (!response.ok) {
         throw new Error(`Erro na API: Status ${response.status}`);
       }
@@ -49,7 +61,6 @@ export class TranscriptionService {
       return data.keywords || [];
     } catch (error) {
       console.error("Falha ao buscar palavras-chave médicas:", error);
-      // Relança o erro para que o componente que chamou possa tratá-lo
       throw new Error("Não foi possível carregar os dados das palavras-chave.");
     }
   }
