@@ -2,7 +2,7 @@
 
 ## 🔧 Como rodar o projeto
 
-Estou usando Angular na sua versão 22.0 com Node 22.12.0
+Estou usando Angular na sua versão 20.0 com Node 22.12.0
 
 ### 🐳 Opção 1 - Usando Docker
 
