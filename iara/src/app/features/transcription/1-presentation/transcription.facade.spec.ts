@@ -5,14 +5,12 @@ import { StartTranscriptionSessionUseCase } from '../2-application/use-cases/sta
 import { of, throwError, Subject, firstValueFrom } from 'rxjs';
 import { TranscriptionSegment } from '../3-domain/models/transcription.model';
 
-// Mocks para os casos de uso
 const mockGetKeywordsUseCase = {
   execute: jasmine.createSpy('execute').and.returnValue(of(['dor', 'febre']))
 };
 
 const mockStartSessionUseCase = {
   execute: jasmine.createSpy('execute'),
-  // Adicionamos uma referência ao repositório para o mock
   transcriptionRepository: {
     getLiveSessionSegmentCount: () => 2
   }
@@ -43,16 +41,14 @@ describe('TranscriptionFacade', () => {
     let segments$: Subject<TranscriptionSegment>;
 
     beforeEach(() => {
-      // Usamos um Subject para ter controle total sobre o stream de dados
       segments$ = new Subject<TranscriptionSegment>();
       mockStartSessionUseCase.execute.and.returnValue(segments$.asObservable());
     });
 
     it('should set isLoading to true and initialize skeletons', async () => {
-      // Act
+     
       facade.startTranscription();
       
-      // Assert
       const isLoading = await firstValueFrom(facade.isLoading$);
       const transcriptions = await firstValueFrom(facade.transcriptions$);
       
@@ -62,14 +58,12 @@ describe('TranscriptionFacade', () => {
     });
 
     it('should update transcriptions as segments arrive', async () => {
-      // Arrange
+   
       facade.startTranscription();
       const segment1: TranscriptionSegment = { segmentId: 0, text: 'tenho dor' };
 
-      // Act
       segments$.next(segment1);
       
-      // Assert
       const transcriptions = await firstValueFrom(facade.transcriptions$);
       expect(transcriptions[0].isLoading).toBe(false);
       expect(transcriptions[0].parts.some(p => p.text === 'dor' && p.isKeyword)).toBe(true);
@@ -77,13 +71,11 @@ describe('TranscriptionFacade', () => {
     });
 
     it('should set isLoading to false when session completes', async () => {
-        // Arrange
+    
         facade.startTranscription();
   
-        // Act
-        segments$.complete(); // Simula o fim da transmissão
-  
-        // Assert
+        segments$.complete(); 
+
         const isLoading = await firstValueFrom(facade.isLoading$);
         expect(isLoading).toBe(false);
     });
@@ -91,7 +83,6 @@ describe('TranscriptionFacade', () => {
 
   describe('filteredTranscriptions$', () => {
     it('should filter transcriptions based on filterText', async () => {
-      // Arrange: Coloca um estado inicial no Facade
       const segment1: TranscriptionSegment = { segmentId: 0, text: 'segmento um' };
       const segment2: TranscriptionSegment = { segmentId: 1, text: 'segmento dois' };
       const segments$ = new Subject<TranscriptionSegment>();
@@ -101,10 +92,8 @@ describe('TranscriptionFacade', () => {
       segments$.next(segment2);
       segments$.complete();
 
-      // Act
       facade.setFilter('dois');
 
-      // Assert
       const filtered = await firstValueFrom(facade.filteredTranscriptions$);
       expect(filtered.length).toBe(1);
       expect(filtered[0].segmentId).toBe(1);

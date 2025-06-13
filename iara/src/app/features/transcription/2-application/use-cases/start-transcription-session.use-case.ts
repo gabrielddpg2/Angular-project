@@ -3,7 +3,7 @@ import { Observable, range, concatMap, from } from "rxjs";
 import { TranscriptionRepository } from "../../3-domain/repositories/transcription.repository";
 import { TranscriptionSegment } from "../../3-domain/models/transcription.model";
 
-@Injectable() // CORREÇÃO: Adicionado @Injectable()
+@Injectable() 
 export class StartTranscriptionSessionUseCase {
     constructor(private transcriptionRepository: TranscriptionRepository) {}
 

@@ -28,7 +28,7 @@ const mockSpeechRecognitionAPI = {
     },
 };
 
-@Injectable() // CORREÇÃO: Adicionado @Injectable()
+@Injectable() 
 export class HttpTranscriptionRepository extends TranscriptionRepository {
 
     override getLiveSessionSegmentCount(): number {

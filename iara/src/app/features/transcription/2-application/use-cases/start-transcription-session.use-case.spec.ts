@@ -23,7 +23,6 @@ describe('StartTranscriptionSessionUseCase', () => {
   });
 
   it('should fetch segments sequentially up to the segment count', (done: DoneFn) => {
-    // Arrange
     const segment1: TranscriptionSegment = { segmentId: 0, text: 'Segmento 0' };
     const segment2: TranscriptionSegment = { segmentId: 1, text: 'Segmento 1' };
 
@@ -32,11 +31,9 @@ describe('StartTranscriptionSessionUseCase', () => {
     
     const emittedSegments: TranscriptionSegment[] = [];
 
-    // Act
     useCase.execute().subscribe({
       next: (segment) => emittedSegments.push(segment),
       complete: () => {
-        // Assert
         expect(mockRepository.getLiveSessionSegmentCount).toHaveBeenCalled();
         expect(mockRepository.fetchTranscription).toHaveBeenCalledWith(0);
         expect(mockRepository.fetchTranscription).toHaveBeenCalledWith(1);

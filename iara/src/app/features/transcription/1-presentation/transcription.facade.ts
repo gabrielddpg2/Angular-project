@@ -4,7 +4,7 @@ import { GetMedicalKeywordsUseCase } from "../2-application/use-cases/get-medica
 import { StartTranscriptionSessionUseCase } from "../2-application/use-cases/start-transcription-session.use-case";
 import { DisplayedTranscription, TranscriptionPart, TranscriptionSegment } from "../3-domain/models/transcription.model";
 
-@Injectable() // CORREÇÃO: Adicionado @Injectable()
+@Injectable() 
 export class TranscriptionFacade implements OnDestroy {
     private state = {
         transcriptions: new BehaviorSubject<DisplayedTranscription[]>([]),
@@ -26,7 +26,6 @@ export class TranscriptionFacade implements OnDestroy {
     ]).pipe(
         map(([transcriptions, filter]) => {
             if (!filter) return transcriptions;
-            // CORREÇÃO: Adicionado tipo explícito para 'part'
             return transcriptions.filter(item =>
                 !item.isLoading && item.parts.some((part: TranscriptionPart) => part.text.toLowerCase().includes(filter))
             );
@@ -58,10 +57,8 @@ export class TranscriptionFacade implements OnDestroy {
             takeUntil(this.sessionStop$),
             takeUntil(this.destroy$)
         ).subscribe({
-            // CORREÇÃO: Adicionado tipo explícito para 'segment'
             next: (segment: TranscriptionSegment) => this.updateTranscriptionSegment(segment),
             complete: () => this.state.isLoading.next(false),
-            // CORREÇÃO: Adicionado tipo 'any' para o erro, que é uma prática comum
             error: (err: any) => {
                 console.error("Erro na sessão de transcrição", err);
                 this.state.error.next("Ocorreu um erro durante a transcrição.");
@@ -80,7 +77,6 @@ export class TranscriptionFacade implements OnDestroy {
 
         const content = transcriptions
             .filter(item => item && !item.isLoading)
-            // CORREÇÃO: Adicionado tipo explícito para 'item' e 'part'
             .map((item: DisplayedTranscription) => {
                 const text = item.parts.map((part: TranscriptionPart) => part.text).join('');
                 return `Segmento ${item.segmentId + 1}: ${text}`;
@@ -100,10 +96,9 @@ export class TranscriptionFacade implements OnDestroy {
         this.getMedicalKeywords.execute().pipe(
             takeUntil(this.destroy$),
             catchError((err: any) => {
-                this.state.error.next("Falha ao carregar palavras-chave. O destaque não funcionará.");
+                this.state.error.next("Falha ao carregar transcrições. Sistema temporiamente indisponível. Tente novamente mais tarde");
                 return of([]);
             })
-        // CORREÇÃO: Adicionado tipo explícito para 'keywords' e 'k'
         ).subscribe((keywords: string[]) => {
             this.medicalKeywordSet = new Set(keywords.map((k: string) => k.toLowerCase()));
         });

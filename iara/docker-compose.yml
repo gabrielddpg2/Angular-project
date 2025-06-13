@@ -1,30 +1,17 @@
 version: '3.8'
 
 services:
-  # Nome do nosso serviço de desenvolvimento
   angular-dev:
-    # Constrói a imagem usando o Dockerfile na pasta atual (.)
     build:
       context: .
-      # Para desenvolvimento, podemos usar apenas o estágio de build,
-      # já que o `ng serve` já é um servidor web.
       target: build
     
-    # Mapeia a porta 4200 do contêiner para a porta 4200 da sua máquina.
     ports:
       - "4200:4200"
       
-    # O comando para iniciar o servidor de desenvolvimento do Angular.
-    # '--host 0.0.0.0' é necessário para expor a porta para fora do contêiner.
     command: npm start -- --host 0.0.0.0
 
-    # A mágica do hot-reload acontece aqui!
     volumes:
-      # Mapeia a pasta atual do seu projeto (.) para a pasta /app dentro do contêiner.
-      # Qualquer alteração que você fizer nos seus arquivos será refletida instantaneamente
-      # dentro do contêiner, e o `ng serve` irá recarregar a aplicação.
       - .:/app
       
-      # Adiciona uma exceção para a pasta node_modules, para que o contêiner
-      # use a sua própria versão instalada, evitando conflitos de sistema operacional.
       - /app/node_modules

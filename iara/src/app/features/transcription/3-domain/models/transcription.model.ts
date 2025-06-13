@@ -1,6 +1,5 @@
 /**
  * Representa uma parte do texto, indicando se é uma palavra-chave.
- * Usado para a renderização com destaque.
  */
 export interface TranscriptionPart {
   text: string;
@@ -9,7 +8,6 @@ export interface TranscriptionPart {
 
 /**
  * Representa um único segmento da transcrição com seu conteúdo já processado.
- * Este é o modelo que a UI irá de fato renderizar.
  */
 export interface DisplayedTranscription {
   segmentId: number;

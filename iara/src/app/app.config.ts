@@ -14,12 +14,8 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimations(),
 
-    // --- INJEÇÃO DE DEPENDÊNCIA CENTRALIZADA ---
-
-    // 1. Diz ao Angular para usar a classe concreta quando a abstração for injetada.
     { provide: TranscriptionRepository, useClass: HttpTranscriptionRepository },
 
-    // 2. Provê os Casos de Uso e o Facade para que sejam injetáveis em toda a aplicação.
     GetMedicalKeywordsUseCase,
     StartTranscriptionSessionUseCase,
     TranscriptionFacade

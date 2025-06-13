@@ -4,7 +4,6 @@ import { TranscriptionFacade } from '../transcription.facade';
 import { BehaviorSubject } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-// Nosso mock do Facade continua o mesmo
 const mockFacade = {
   isLoading$: new BehaviorSubject<boolean>(false),
   filteredTranscriptions$: new BehaviorSubject<any[]>([]),
@@ -22,20 +21,14 @@ describe('TranscriptionComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TranscriptionComponent],
-      // --- INÍCIO DA CORREÇÃO ---
-      // Fornecemos o mock do Facade diretamente aqui.
-      // Isso garante que qualquer parte deste ambiente de teste que peça
-      // pelo TranscriptionFacade receberá nosso mock.
       providers: [
         { provide: TranscriptionFacade, useValue: mockFacade }
       ],
-      // --- FIM DA CORREÇÃO ---
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(TranscriptionComponent);
     component = fixture.componentInstance;
-    // Agora o TestBed.inject funciona, pois o provider foi configurado acima.
     facade = TestBed.inject(TranscriptionFacade);
     fixture.detectChanges();
   });
