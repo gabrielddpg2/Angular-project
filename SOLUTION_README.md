@@ -2,23 +2,27 @@
 
 ## 🔧 Como rodar o projeto
 
+Estou usando Angular na sua versão 22.0
+node 22.12.0
+
 ### 🐳 Opção 1 - Usando Docker
 
 1. Navegue até a pasta `Iara`:
    ```bash
    cd iara
    ```
-
-2. Instale dependências Angular:
+2. Com o Docker Desktop aberto, execute:
+   ```bash
+   docker-compose up
+   ```
+3. Em caso de retornar error ao executar docker-compose, possivelmente é o Angular que está exigindo que instale essas dependências de forma manual:
    ```bash
    npm install @angular/animations --save
    npm install @angular/cdk --save
    ```
+   depois rode docker-compose up novamente
 
-3. Com o Docker Desktop aberto, execute:
-   ```bash
-   docker-compose up
-   ```
+
 
 ---
 
@@ -104,6 +108,12 @@ Essas técnicas mantêm o sistema **leve e rápido em qualquer escala**.
 
 - **Exportação para TXT:**  
   Permite exportar a transcrição completa para um arquivo `.txt`.
+
+---
+
+## ✨ Testes
+
+ Configurei testes unitário para a aplicação.
 
 ---
 
