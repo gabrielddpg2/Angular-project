@@ -125,3 +125,43 @@ Essas técnicas mantêm o sistema **leve e rápido em qualquer escala**.
   Agora o filtro é **mais preciso**, evitando falsos positivos.
 
 ---
+
+# 🛠️ Tecnologias Utilizadas
+
+Este projeto foi desenvolvido com foco em escalabilidade, manutenibilidade e performance. Abaixo, um resumo das principais tecnologias escolhidas e os motivos por trás de cada decisão.
+
+---
+
+## ⚙️ Angular
+
+Angular foi escolhido por ser um **framework robusto e completo**, ideal para aplicações de grande escala.
+
+- Oferece uma estrutura opinativa que guia o desenvolvimento com boas práticas.
+- O sistema de **Injeção de Dependências** facilita a aplicação da **Clean Architecture**, promovendo um código **desacoplado** e altamente **testável**.
+- O uso de **TypeScript** adiciona tipagem estática e melhora a manutenção e refatoração do código ao longo do tempo.
+
+---
+
+## 🎨 Tailwind CSS
+
+Adotado por sua abordagem **utility-first**, que permite criar interfaces de forma rápida e altamente customizável.
+
+- O compilador **JIT (Just-In-Time)** garante que o CSS final contenha apenas o necessário, resultando em melhor performance.
+- O arquivo de configuração central (`tailwind.config.js`) facilita a padronização visual em toda a aplicação.
+- Ideal para construir layouts modernos com produtividade.
+
+---
+
+## 🐳 Docker
+
+A aplicação foi **containerizada** com Docker para garantir um ambiente de desenvolvimento **padronizado** e **isolado**.
+
+- Elimina o problema do “**funciona na minha máquina**”.
+- Permite rodar todo o projeto com apenas um comando:
+  ```bash
+  docker-compose up
+  ```
+- Evita conflitos de versões do Node.js ou dependências globais.
+- Simplifica o onboarding de novos desenvolvedores.
+
+---
