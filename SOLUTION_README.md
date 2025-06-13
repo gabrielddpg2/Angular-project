@@ -1,59 +1,118 @@
-para rodar o projeto:
+# Iara - HMY Challenge
 
-opção 1 - com Docker:
+## 🔧 Como rodar o projeto
 
-dentro da pasta Iara rode:
+### 🐳 Opção 1 - Usando Docker
 
-npm install @angular/animations --save
-npm install @angular/cdk --save
+1. Navegue até a pasta `Iara`:
+   ```bash
+   cd iara
+   ```
 
-com docker desktop aberto rode:
+2. Instale dependências Angular:
+   ```bash
+   npm install @angular/animations --save
+   npm install @angular/cdk --save
+   ```
 
-docker-compose up
+3. Com o Docker Desktop aberto, execute:
+   ```bash
+   docker-compose up
+   ```
 
-opção 2 - apenas com Angular - node v22.12.0:
-dentro da pasta Iara rode:
+---
 
-npm install
-npm install @angular/animations --save
-npm install @angular/cdk --save
+### 🧩 Opção 2 - Rodando localmente (Node.js v22.12.0)
 
-ng serve
+1. Navegue até a pasta `Iara`:
+   ```bash
+   cd iara
+   ```
 
-para rodar bateria de testes:
+2. Instale todas as dependências:
+   ```bash
+   npm install
+   npm install @angular/animations --save
+   npm install @angular/cdk --save
+   ```
 
+3. Inicie a aplicação:
+   ```bash
+   ng serve
+   ```
+
+---
+
+## ✅ Testes
+
+Para rodar a bateria de testes:
+
+```bash
 ng test
+```
 
-projeto deployed:
+---
 
-https://iarahmychallenge.netlify.app/
+## 🌐 Projeto em produção
 
-----------------------------------
+Acesse: [https://iarahmychallenge.netlify.app/](https://iarahmychallenge.netlify.app/)
 
-informações gerais sobre minha solução
+---
 
-angular v20.0 com tailwind css e Docker
-arquitetura: Clean architeture + facade
+## 📌 Sobre a solução
 
--------
-imaginei um cenário onde a quantidade de dados seria de milhares ou milhões. Neste caso, o projeto para manter perfomance teria que ser refatorado, para tal, implementei: virtual scrolling e a paralelização de requisições: Para otimizar a aplicação para milhões de dados, que renderiza somente os itens visíveis na tela para economizar memória, e a paralelização de requisições, que busca todos os dados de uma vez para acelerar drasticamente o carregamento. Juntas, essas técnicas garantem que o sistema permaneça rápido e eficiente em qualquer escala.
--------
+- **Framework:** Angular v20.0  
+- **Estilização:** Tailwind CSS  
+- **Containerização:** Docker  
+- **Arquitetura:** Clean Architecture + Facade Pattern  
 
-em um cenário onde o endpoint da API não responde foi implementado um caso que mostra isso de forma visual pro usuario como feedback.
+---
 
+## 🚀 Otimizações implementadas
 
-o sistema esta responsivo, apropriado também para smartphones.
+### Pensando em escalabilidade
 
-layout visualmente mais atrativo e animações adicionada.
+Imaginando um cenário com **milhares ou milhões de registros**, implementei:
 
-features adicionais:
-"filtrar transcrições": permite retornar apenas descrições que tem o iten de busca digitado pelo o usuario.
-"exportar para .TXT": permite exportar toda a transcrição para um arquivo TXT
+- **Virtual Scrolling:**  
+  Exibe apenas os elementos visíveis, economizando memória.
 
---------
+- **Paralelização de requisições:**  
+  Realiza múltiplas chamadas simultâneas para reduzir o tempo de carregamento.
 
-alguns erros tratados do codigo base do desafio:
-melhor filtro de palavra chave. EX: em "A DOR piora quando fico muito tempo em frente ao computaDOR" ele idenficava dor com computador como palavra chave.
+Essas técnicas mantêm o sistema **leve e rápido em qualquer escala**.
 
+---
 
+### 🧠 Tratamento de Erros
 
+- Em caso de falha da API, o sistema exibe **feedback visual** ao usuário.
+
+---
+
+### 📱 Responsividade
+
+- Layout adaptado para **dispositivos móveis**.
+- Animações para melhorar a **experiência visual**.
+
+---
+
+## ✨ Funcionalidades adicionais
+
+- **Filtro de transcrições:**  
+  Exibe apenas descrições que contenham o termo buscado pelo usuário.
+
+- **Exportação para TXT:**  
+  Permite exportar a transcrição completa para um arquivo `.txt`.
+
+---
+
+## 🛠️ Melhorias no código base original
+
+- **Filtro de palavras-chave aprimorado:**  
+  Exemplo:
+  > Antes, a frase "A DOR piora quando fico muito tempo em frente ao computaDOR" identificava erroneamente "dor" como parte de "computador".
+
+  Agora o filtro é **mais preciso**, evitando falsos positivos.
+
+---
