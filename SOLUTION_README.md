@@ -1,4 +1,4 @@
-# Iara - HMY Challenge
+# Iara Health - solução
 
 ## 🔧 Como rodar o projeto
 
