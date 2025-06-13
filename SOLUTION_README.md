@@ -2,8 +2,7 @@
 
 ## 🔧 Como rodar o projeto
 
-Estou usando Angular na sua versão 22.0
-node 22.12.0
+Estou usando Angular na sua versão 22.0 com Node 22.12.0
 
 ### 🐳 Opção 1 - Usando Docker
 
@@ -22,7 +21,7 @@ node 22.12.0
    ```
    depois rode docker-compose up novamente
 
-
+para ambos casos estará rodando em: [http://localhost:4200/](http://localhost:4200/)
 
 ---
 
